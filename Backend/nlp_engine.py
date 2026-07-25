@@ -71,6 +71,6 @@ def process_text(user_input: str, inventory: dict) -> dict:
 if __name__ == "__main__":
     db = load_inventory()
     # Testing with singular 'egg' and plural 'batteries'
-    test_sentence = "Hello, where can I find eggs, breads, sugar and some batteries?"
+    test_sentence = "Hello, where can I find eggs, bread, and some batteries?"
     print(f"Input: {test_sentence}")
     print("Output:", process_text(test_sentence, db))
