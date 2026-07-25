@@ -1,0 +1,16 @@
+supermarket-chatbot/
+│
+├── backend/                  # FastAPI & NLTK Application
+│   ├── main.py               # API endpoints and server configuration
+│   ├── nlp_engine.py         # NLTK tokenization and POS tagging logic
+│   ├── database.json         # Mock database of goods and shelf locations
+│   └── requirements.txt      # Python dependencies
+│
+└── frontend/                 # React Application
+    ├── package.json          # Node dependencies
+    ├── public/
+    │   └── index.html        
+    └── src/
+        ├── App.js            # Main chat interface and print logic
+        ├── index.js          # React entry point
+        └── App.css           # Basic UI styling
