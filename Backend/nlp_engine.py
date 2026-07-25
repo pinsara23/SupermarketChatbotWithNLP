@@ -1,10 +1,16 @@
 import json
 import nltk
 import os
+from nltk.stem import WordNetLemmatizer
 
-# Download NLTK datasets silently
+# Download NLTK datasets silently (added wordnet for lemmatization)
 nltk.download('punkt', quiet=True)
 nltk.download('averaged_perceptron_tagger', quiet=True)
+nltk.download('wordnet', quiet=True)
+nltk.download('omw-1.4', quiet=True)
+
+# Initialize the lemmatizer
+lemmatizer = WordNetLemmatizer()
 
 def load_inventory(filepath="database.json"):
     """Loads the product-location mapping from the JSON file."""
@@ -15,11 +21,12 @@ def load_inventory(filepath="database.json"):
         return json.load(file)
 
 def process_text(user_input: str, inventory: dict) -> dict:
-
     """
-    Takes user text, tokenizes it, and extracts items.
-    Bypasses POS tagging for known DB items to avoid NLTK misclassification.
-    Uses POS tagging to find unknown nouns.
+    NLP Pipeline:
+    1. Tokenize and POS tag.
+    2. Lemmatize every word.
+    3. Check the inventory FIRST to bypass NLTK misclassifications.
+    4. If not in DB, use POS tags to catch unknown Nouns.
     """
     tokens = nltk.word_tokenize(user_input)
     pos_tags = nltk.pos_tag(tokens)
@@ -28,28 +35,34 @@ def process_text(user_input: str, inventory: dict) -> dict:
     unrecognized = []
     found_items = set()
     
-    ignore_words = {"shelf", "list", "items", "where", "store", "hello", "hi", "please", "can", "find"}
+    ignore_words = {"shelf", "list", "item", "where", "store", "hello", "hi", "please", "can", "find"}
+    
+    normalized_inventory = {}
+    for key, shelf in inventory.items():
+        lemma_key = lemmatizer.lemmatize(key.lower())
+        normalized_inventory[lemma_key] = {"original": key, "shelf": shelf}
     
     for word, tag in pos_tags:
-        # Strip out punctuation and lowercase it
         word_lower = word.lower()
         
-        # We only care about actual words, not commas or question marks
         if not word_lower.isalpha():
             continue
-
-        # If the word is in our database, it's a product! Ignore NLTK's grammar tag.
-        if word_lower in inventory:
-            if word_lower not in found_items:
-                locations.append({"item": word_lower, "shelf": inventory[word_lower]})
-                found_items.add(word_lower)
+            
+        # Lemmatize every word immediately so we can match plurals to the DB
+        lemma_word = lemmatizer.lemmatize(word_lower)
+        
+        # Step 1: Check inventory FIRST. If it's a known product, we don't care what NLTK tagged it as.
+        if lemma_word in normalized_inventory:
+            if lemma_word not in found_items:
+                db_item = normalized_inventory[lemma_word]
+                locations.append({"item": db_item["original"], "shelf": db_item["shelf"]})
+                found_items.add(lemma_word)
                 
-        # POS Tagging for Unknowns
-        # If it's not in the DB, but NLTK says it's a Noun (NN or NNS)
+        # Step 2: If it's not in the DB, THEN check if NLTK tagged it as a Noun (NN or NNS)
         elif tag.startswith('NN'):
-            if word_lower not in ignore_words and word_lower not in unrecognized:
-                unrecognized.append(word_lower)
-                    
+            if lemma_word not in ignore_words and lemma_word not in unrecognized:
+                unrecognized.append(lemma_word)
+                
     return {
         "locations": locations,
         "unrecognized": unrecognized
@@ -57,6 +70,7 @@ def process_text(user_input: str, inventory: dict) -> dict:
 
 if __name__ == "__main__":
     db = load_inventory()
-    test_sentence = "Hello, where can I find egg, bread, and some batteries?"
+    # Testing with singular 'egg' and plural 'batteries'
+    test_sentence = "Hello, where can I find eggs, breads, sugar and some batteries?"
     print(f"Input: {test_sentence}")
     print("Output:", process_text(test_sentence, db))
