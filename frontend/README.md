@@ -1,53 +1,113 @@
-# Getting Started with Create React App
+# Supermarket Chatbot Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Modern React-based user interface for the Supermarket Chatbot application. Built with React 19, Tailwind CSS, and Lucide React icons.
 
-## Available Scripts
+## 🚀 Quick Start
 
-In the project directory, you can run:
+### Prerequisites
+- Node.js 14+ and npm
+- Backend server running on `http://localhost:8000`
+
+### Installation
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm start
+   ```
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## 📦 Available Scripts
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Runs the app in development mode.
+- Opens [http://localhost:3000](http://localhost:3000) in your browser
+- The page reloads when you make changes
+- Lint errors appear in the console
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode.
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Builds the app for production to the `build` folder.
+- Bundles and optimizes React in production mode
+- Minifies files and includes content hashes
+- Ready for deployment
 
 ### `npm run eject`
+**Note:** One-way operation. Gives you full control over configuration.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🎨 Tech Stack
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **React 19.2.8**: Latest React library for UI components
+- **Tailwind CSS**: Utility-first CSS framework for styling
+- **Lucide React**: Beautiful SVG icon library
+- **React Scripts 5.0.1**: Build tool and development server
+- **Testing Library**: Unit and integration testing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🏗️ Project Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+src/
+├── App.js          # Main application component
+├── App.css         # Application styles
+├── index.js        # React entry point
+├── index.css       # Global styles
+├── setupTests.js   # Test configuration
+└── reportWebVitals.js  # Performance monitoring
 
-## Learn More
+public/
+├── index.html      # HTML template
+├── manifest.json   # PWA manifest
+└── robots.txt      # SEO robots file
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🔗 API Integration
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The frontend connects to the backend API at `http://localhost:8000`.
 
-### Code Splitting
+**Chat Endpoint:**
+- Method: POST
+- URL: `http://localhost:8000/chat`
+- Request: `{ "user_input": "user query" }`
+- Response: `{ "locations": [...], "unrecognized": [...] }`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🎯 Features
+
+- Clean, intuitive user interface
+- Real-time product search
+- Product location display
+- Responsive design for all devices
+- Error handling and user feedback
+
+## 🚀 Deployment
+
+1. Build the production bundle:
+   ```bash
+   npm run build
+   ```
+
+2. The `build` folder contains static files ready for deployment
+
+3. Deploy to any static hosting service (Vercel, Netlify, GitHub Pages, etc.)
+
+## 📚 Learn More
+
+- [React Documentation](https://react.dev/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Create React App Documentation](https://create-react-app.dev/)
+
+## 🐛 Troubleshooting
+
+- **API Connection Errors**: Ensure the backend server is running on port 8000
+- **Module Not Found**: Run `npm install` to install all dependencies
+- **Port Already in Use**: Change the port by setting `PORT=3001` before running `npm start`
+- **Build Failures**: Clear node_modules and reinstall: `rm -rf node_modules && npm install`
 
 ### Analyzing the Bundle Size
 
