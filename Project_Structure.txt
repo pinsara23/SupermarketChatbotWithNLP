@@ -14,3 +14,6 @@ supermarket-chatbot/
         ├── App.js            # Main chat interface and print logic
         ├── index.js          # React entry point
         └── App.css           # Basic UI styling
+        
+uvicorn main:app --reload
+superbot-env
