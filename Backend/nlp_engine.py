@@ -36,7 +36,7 @@ def process_text(user_input: str, inventory: dict) -> dict:
     unrecognized = []
     found_items = set()
     
-    ignore_words = {"shelf", "list", "item", "where", "store", "hello", "hi", "please", "can", "find"}
+    ignore_words = {"shelf", "list", "item", "where", "store", "hello", "hi", "please", "can", "find", "i", "you", "me", "the", "a", "an", "and", "some", "of", "in", "on", "at", "for", "buy", "get", "want", "need", "looking", "looking for", "looking to buy", "looking to get", "looking to find"}
     
     normalized_inventory = {}
     for key, shelf in inventory.items():
@@ -48,11 +48,14 @@ def process_text(user_input: str, inventory: dict) -> dict:
         
         if not word_lower.isalpha():
             continue
+
+        if not tag.startswith('NN'):
+            continue
             
         # Lemmatize every word immediately so we can match plurals to the DB
         lemma_word = lemmatizer.lemmatize(word_lower)
         
-        #1: Check inventory FIRST. If it's a known product, we don't care what NLTK tagged it as.
+        #1. Check inventory FIRST. If it's a known product, we don't care what NLTK tagged it as.
         if lemma_word in normalized_inventory:
             if lemma_word not in found_items:
                 db_item = normalized_inventory[lemma_word]
@@ -71,9 +74,8 @@ def process_text(user_input: str, inventory: dict) -> dict:
                     locations.append({"item": db_item["original"], "shelf": db_item["shelf"]})
                     found_items.add(best_match)
 
-            #3: If it's not in the DB, THEN check if NLTK tagged it as a Noun (NN or NNS)        
-            elif tag.startswith('NN'):
-                if lemma_word not in ignore_words and lemma_word not in unrecognized:
+            #3. If it's not in the DB, THEN check if NLTK tagged it as a Noun (NN or NNS)        
+            elif lemma_word not in ignore_words and lemma_word not in unrecognized:
                     unrecognized.append(lemma_word)
                            
     return {
@@ -83,7 +85,7 @@ def process_text(user_input: str, inventory: dict) -> dict:
 
 if __name__ == "__main__":
     db = load_inventory()
-    # Testing with singular 'egg' and plural 'batteries'
-    test_sentence = "Hello, where can I find aple, bread, cheese, egg and some batteries?"
+    # Testing code
+    test_sentence = "Hello, where can I find aple, bread, cheese, eggs and some batteries?"
     print(f"Input: {test_sentence}")
     print("Output:", process_text(test_sentence, db))
